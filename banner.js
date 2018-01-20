@@ -101,7 +101,7 @@
 
 	    };
 
-        //whentransition>//
+        //whentransition> +ing& transitionend//
         //function(transitionend)
         //transitionend--->去判斷 0 | 2----> 結束刪除ing
         //clearInterval
