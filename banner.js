@@ -87,8 +87,11 @@
 
 		if ( this.SetStatus === 2) {	
 			this.open();
+           // setInterval(whentransition,多久一次)//觸發監測transitionend
+           //
 		} else if ( this.SetStatus === 0 ) {
 			 this.close();
+
 		}
 		if(this.SetStatus === 0 | this.SetStatus === 1 ){
 			document.getElementById('btn').innerHTML = '收合';
@@ -97,6 +100,12 @@
 		};
 
 	    };
+
+        //whentransition>//
+        //function(transitionend)
+        //transitionend--->去判斷 0 | 2----> 結束刪除ing
+        //clearInterval
+
 
         Module.prototype.open = function () {
 		this.$ele.removeClass(this.nowStatus(this.SetStatus)).addClass(this.nowStatus(this.closeSetStatus()));
