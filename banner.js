@@ -1,4 +1,3 @@
-
 (function($) {
 'use strict'; 
 
@@ -16,6 +15,7 @@
         this.SetStatus = 0;
         this.$btn=$('<div class="btn" id="btn"></div>');
         this.setInterval;
+        self=this;
 	};
 
 
@@ -34,113 +34,133 @@
 			class: 'btn'
 	    },
         transition:true,
+        whenTransition: function() {
+		console.log('whenTransition');
+	     }
 	    };
 
-
+           
     Module.prototype.init = function () {    
-    	   console.log(this);
-           this.$ele.append(this.$btn);	
 
+           this.$ele.append(this.$btn);	
+           document.getElementById('btn').innerHTML = this.option.button.openText;
            var x = this.SetStatus;
-          ///////設定起始狀態
+
           if( this.option.openAtStart ===true){
              this.SetStatus = 2;//closed
-			 document.getElementById('btn').innerHTML = '展開';
-
+			 document.getElementById('btn').innerHTML = this.option.button.openText;
 		  }else{
 			 this.SetStatus = 0;//opened
-			 document.getElementById('btn').innerHTML = '收合';
-          };/////
-
-
+			 document.getElementById('btn').innerHTML = this.option.button.closeText;
+          };
 
           if ( this.option.transition ===true ) {
 			 this.addTransition();
-		  };// 是否要有transition效果
-
-
+		  };
 		   this.$ele.addClass(this.status[this.SetStatus]);
-		   ////看初始狀態給正確的class
-		   //console.log(x);
-		   //true=0 false=2
-		   //console.log(this);
-		   //Module
-           //console.log(this.nowStatus(this.SetStatus)); OPENED
-
      };////Module.prototype.init
+
+      Module.prototype.imgclose = function() {
+      	 $('.img').addClass('imgclose');
+      }
+
+
+
+
 
 
 		Module.prototype.addTransition = function() {
 				if (!this.$ele.hasClass('transition') ) {
 					this.$ele.addClass('transition');
 				}
-		};////addTransition
-
-        Module.prototype.nowStatus = function(SetStatus){
-			return this.option.class[this.status[SetStatus]];
-			//this.status抓四個設定狀態
-		}//設定索引
-
-
-/////////////////////////////////////////////////////////////
-       Module.prototype.toggle = function () {
-
-		if ( this.SetStatus === 2) {	
-			this.open();
-           // setInterval(whentransition,多久一次)//觸發監測transitionend
-           //
-		} else if ( this.SetStatus === 0 ) {
-			 this.close();
-
-		}
-		if(this.SetStatus === 0 | this.SetStatus === 1 ){
-			document.getElementById('btn').innerHTML = '收合';
-		}else{
-			document.getElementById('btn').innerHTML = '展開';
 		};
 
+       Module.prototype.toggle = function () {
+
+       if ( this.option.transition ===true ) {			 
+		if ((self.$ele.hasClass(self.option.class.closed))) {//closed	
+			this.toggleopen();
+			$('.img').removeClass('imgclose');
+		} else if ((self.$ele.hasClass(self.option.class.opened))) {//opened
+			console.log('555');
+			 this.toggleclose();
+		};
+        	this.setInterval = setInterval(this.option.whenTransition, 50);
+	    }
+		else{
+            if ((self.$ele.hasClass(self.option.class.closed))) {//closed	
+			 this.open();
+             document.getElementById('btn').innerHTML = this.option.button.closeText;
+		} else if ((self.$ele.hasClass(self.option.class.opened))) {//opened
+			 this.close();
+             document.getElementById('btn').innerHTML = this.option.button.openText;
+		};
+		};		
 	    };
 
-        //whentransition> +ing& transitionend//
-        //function(transitionend)
-        //transitionend--->去判斷 0 | 2----> 結束刪除ing
-        //clearInterval
 
-
-        Module.prototype.open = function () {
-		this.$ele.removeClass(this.nowStatus(this.SetStatus)).addClass(this.nowStatus(this.closeSetStatus()));
-		// -closed +closing
-  		this.$ele.removeClass(this.nowStatus(this.SetStatus)).addClass(this.nowStatus(this.closeSetStatus()));
-  		//-closing +opened
-		return this.SetStatus;
+        Module.prototype.toggleopen = function () {//opened
+		this.$ele.addClass(this.option.class.opening);
+		//this.$ele.addClass(this.option.class.opened);
+		this.$ele.removeClass(this.option.class.closed);
+		 console.log('111');
+         document.getElementById("banner").addEventListener("transitionend", this.toggletransitionEnd);
 	     };
 
-        Module.prototype.close = function () {
-		this.$ele.removeClass(this.nowStatus(this.SetStatus)).addClass(this.nowStatus(this.openSetStatus()));
-        //-opened +closing
-		this.$ele.removeClass(this.nowStatus(this.SetStatus)).addClass(this.nowStatus(this.openSetStatus()));
-        //-closing +closed
-		return this.SetStatus;			
+        Module.prototype.toggleclose = function () {//closed
+		this.$ele.addClass(this.option.class.closing);
+		//this.$ele.addClass(this.option.class.closed);
+		this.$ele.removeClass(this.option.class.opened);
+        document.getElementById("banner").addEventListener("transitionend", this.toggletransitionEnd);
 	     };
 
-         //['opened','closing','closed','opening'];
-         //[0 , 1 , 2 , 3]
-        Module.prototype.openSetStatus = function () {
-		if(this.SetStatus > this.status.lenght-1){     // 0 > -1
-			this.SetStatus = 0;
+
+         Module.prototype.toggletransitionEnd = function () {
+           if (self.$ele.hasClass(self.option.class.closing)) {
+
+           	self.$ele.removeClass(self.option.class.closing);
+	        self.$ele.addClass(self.option.class.closed);
+			document.getElementById('btn').innerHTML = self.option.button.openText;
+			$('.img').addClass('imgclose');
+		 } else if (self.$ele.hasClass(self.option.class.opening)) {
+
+		 	self.$ele.removeClass(self.option.class.opening);
+            self.$ele.addClass(self.option.class.opened);
+	        document.getElementById('btn').innerHTML = self.option.button.closeText;
 		}
-		this.SetStatus ++;
-		return this.SetStatus;
+	    self.clearInterval();
 	    };
+      
+        Module.prototype.clearInterval = function () {
+            clearInterval(this.setInterval);
+         };
 
-        Module.prototype.closeSetStatus = function () {  // 2 < 1
-		if(this.SetStatus < this.status.lenght-1){
-			this.SetStatus = 2;
-		}
-		this.SetStatus --;
-		return this.SetStatus;
+
+
+
+         
+        Module.prototype.open = function () {//closed
+		this.$ele.addClass(this.option.class.opened);
+		this.$ele.removeClass(this.option.class.closed);
+		$('.img').removeClass('imgclose');
+         //document.getElementById("banner").addEventListener("transitionend", this.transitionEnd);
 	     };
-////////////// /////////////////////////////////////////
+
+        Module.prototype.close = function () {//opened
+		this.$ele.addClass(this.option.class.closed);
+		this.$ele.removeClass(this.option.class.opened);
+		$('.img').addClass('imgclose');
+        //document.getElementById("banner").addEventListener("transitionend", this.transitionEnd);
+	     };
+
+
+
+
+
+
+
+
+
 
 
 	$.fn[ModuleName] = function ( methods, options ) {
@@ -168,11 +188,11 @@
 				// console.log($this.data( ModuleName ));
 				module.init();
 				module.$btn.on('click', function() {
-				module.toggle();
+				module.toggle();				
 				});
-			}
+
+			};
 		});
 	};
 
 })(jQuery);
-
