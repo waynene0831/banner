@@ -43,26 +43,30 @@
     Module.prototype.init = function () {    
 
            this.$ele.append(this.$btn);	
-           document.getElementById('btn').innerHTML = this.option.button.openText;
+           //document.getElementById('btn').innerHTML = self.option.button.closeText
            var x = this.SetStatus;
-
           if( this.option.openAtStart ===true){
              this.SetStatus = 2;//closed
-			 document.getElementById('btn').innerHTML = this.option.button.openText;
+			 document.getElementById('btn').innerHTML = self.option.button.closeText;
+			 setTimeout(function(){ self.$ele.addClass(self.status[self.SetStatus]);
+             document.getElementById('btn').innerHTML = self.option.button.openText;
+             //document.getElementById("banner").addEventListener("transitionend", self.imgclose);
+			  }, 2000);
+
 		  }else{
-			 this.SetStatus = 0;//opened
-			 document.getElementById('btn').innerHTML = this.option.button.closeText;
+		  	 this.SetStatus = 0;
+			 document.getElementById('btn').innerHTML = self.option.button.openText;
+			 self.$ele.addClass(self.status[self.SetStatus]); 
           };
 
           if ( this.option.transition ===true ) {
 			 this.addTransition();
 		  };
-		   this.$ele.addClass(this.status[this.SetStatus]);
-     };////Module.prototype.init
+		  
+		   // self.$ele.addClass(self.status[self.SetStatus]);
+        };////Module.prototype.init
 
-      Module.prototype.imgclose = function() {
-      	 $('.img').addClass('imgclose');
-      }
+ 
 
 
 
@@ -80,8 +84,8 @@
        if ( this.option.transition ===true ) {			 
 		if ((self.$ele.hasClass(self.option.class.closed))) {//closed	
 			this.toggleopen();
-			$('.img').removeClass('imgclose');
-		} else if ((self.$ele.hasClass(self.option.class.opened))) {//opened
+			//$('.img').removeClass('imgclose');
+		   } else if ((self.$ele.hasClass(self.option.class.opened))) {//opened
 			console.log('555');
 			 this.toggleclose();
 		};
@@ -117,16 +121,16 @@
 
          Module.prototype.toggletransitionEnd = function () {
            if (self.$ele.hasClass(self.option.class.closing)) {
-
+            
            	self.$ele.removeClass(self.option.class.closing);
 	        self.$ele.addClass(self.option.class.closed);
 			document.getElementById('btn').innerHTML = self.option.button.openText;
-			$('.img').addClass('imgclose');
+			//document.getElementById("banner").addEventListener("transitionend", self.imgcloseremove);
 		 } else if (self.$ele.hasClass(self.option.class.opening)) {
-
 		 	self.$ele.removeClass(self.option.class.opening);
             self.$ele.addClass(self.option.class.opened);
 	        document.getElementById('btn').innerHTML = self.option.button.closeText;
+	       
 		}
 	    self.clearInterval();
 	    };
@@ -141,22 +145,26 @@
          
         Module.prototype.open = function () {//closed
 		this.$ele.addClass(this.option.class.opened);
+		 // $('.img').removeClass('imgclose');
 		this.$ele.removeClass(this.option.class.closed);
-		$('.img').removeClass('imgclose');
-         //document.getElementById("banner").addEventListener("transitionend", this.transitionEnd);
+		document.getElementById('btn').innerHTML = self.option.button.closeText;
+        //document.getElementById("banner").addEventListener("transitionend", this.imgcloseremove);
 	     };
 
         Module.prototype.close = function () {//opened
 		this.$ele.addClass(this.option.class.closed);
 		this.$ele.removeClass(this.option.class.opened);
-		$('.img').addClass('imgclose');
-        //document.getElementById("banner").addEventListener("transitionend", this.transitionEnd);
+		document.getElementById('btn').innerHTML = self.option.button.openText;
+		 //document.getElementById("banner").addEventListener("transitionend", self.imgclose);
 	     };
+   //      Module.prototype.imgclose = function() {
+   //    	 $('.img').addClass('imgclose');
+   //    	 document.getElementById('btn').innerHTML = self.option.button.openText;
+   //    };
 
-
-
-
-
+		 // Module.prototype.imgcloseremove = function () {
+		 // $('.img').removeClass('imgclose');
+		 // };
 
 
 
