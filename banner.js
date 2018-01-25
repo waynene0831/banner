@@ -155,7 +155,7 @@
 
         Module.prototype.imgclose = function () {
         	 setTimeout(function(){
-        	$('.img').addClass('imgclose')}, 2500);
+        	$('.img').addClass('imgclose')}, 2750);
         };
 
 
