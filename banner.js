@@ -43,27 +43,28 @@
     Module.prototype.init = function () {    
 
            this.$ele.append(this.$btn);	
-           //document.getElementById('btn').innerHTML = self.option.button.closeText
+ 
            var x = this.SetStatus;
           if( this.option.openAtStart ===true){
              this.SetStatus = 2;//closed
 			 document.getElementById('btn').innerHTML = self.option.button.closeText;
+
 			 setTimeout(function(){ self.$ele.addClass(self.status[self.SetStatus]);
              document.getElementById('btn').innerHTML = self.option.button.openText;
-             //document.getElementById("banner").addEventListener("transitionend", self.imgclose);
 			  }, 2000);
-
+             document.getElementById("banner").addEventListener("transitionend", self.imgclose());
 		  }else{
 		  	 this.SetStatus = 0;
-			 document.getElementById('btn').innerHTML = self.option.button.openText;
+			 document.getElementById('btn').innerHTML = self.option.button.closeText;
 			 self.$ele.addClass(self.status[self.SetStatus]); 
+			 $('.img').removeClass('imgclose');
           };
 
           if ( this.option.transition ===true ) {
 			 this.addTransition();
 		  };
 		  
-		   // self.$ele.addClass(self.status[self.SetStatus]);
+
         };////Module.prototype.init
 
  
@@ -84,9 +85,8 @@
        if ( this.option.transition ===true ) {			 
 		if ((self.$ele.hasClass(self.option.class.closed))) {//closed	
 			this.toggleopen();
-			//$('.img').removeClass('imgclose');
+			$('.img').removeClass('imgclose');
 		   } else if ((self.$ele.hasClass(self.option.class.opened))) {//opened
-			console.log('555');
 			 this.toggleclose();
 		};
         	this.setInterval = setInterval(this.option.whenTransition, 50);
@@ -105,7 +105,6 @@
 
         Module.prototype.toggleopen = function () {//opened
 		this.$ele.addClass(this.option.class.opening);
-		//this.$ele.addClass(this.option.class.opened);
 		this.$ele.removeClass(this.option.class.closed);
 		 console.log('111');
          document.getElementById("banner").addEventListener("transitionend", this.toggletransitionEnd);
@@ -113,24 +112,21 @@
 
         Module.prototype.toggleclose = function () {//closed
 		this.$ele.addClass(this.option.class.closing);
-		//this.$ele.addClass(this.option.class.closed);
 		this.$ele.removeClass(this.option.class.opened);
         document.getElementById("banner").addEventListener("transitionend", this.toggletransitionEnd);
 	     };
 
 
          Module.prototype.toggletransitionEnd = function () {
-           if (self.$ele.hasClass(self.option.class.closing)) {
-            
+           if (self.$ele.hasClass(self.option.class.closing)) {    
            	self.$ele.removeClass(self.option.class.closing);
 	        self.$ele.addClass(self.option.class.closed);
 			document.getElementById('btn').innerHTML = self.option.button.openText;
-			//document.getElementById("banner").addEventListener("transitionend", self.imgcloseremove);
+			$('.img').addClass('imgclose');
 		 } else if (self.$ele.hasClass(self.option.class.opening)) {
 		 	self.$ele.removeClass(self.option.class.opening);
             self.$ele.addClass(self.option.class.opened);
-	        document.getElementById('btn').innerHTML = self.option.button.closeText;
-	       
+	        document.getElementById('btn').innerHTML = self.option.button.closeText;	       
 		}
 	    self.clearInterval();
 	    };
@@ -145,28 +141,22 @@
          
         Module.prototype.open = function () {//closed
 		this.$ele.addClass(this.option.class.opened);
-		 // $('.img').removeClass('imgclose');
 		this.$ele.removeClass(this.option.class.closed);
 		document.getElementById('btn').innerHTML = self.option.button.closeText;
-        //document.getElementById("banner").addEventListener("transitionend", this.imgcloseremove);
+		$('.img').removeClass('imgclose');
 	     };
 
         Module.prototype.close = function () {//opened
 		this.$ele.addClass(this.option.class.closed);
 		this.$ele.removeClass(this.option.class.opened);
 		document.getElementById('btn').innerHTML = self.option.button.openText;
-		 //document.getElementById("banner").addEventListener("transitionend", self.imgclose);
+		$('.img').addClass('imgclose')
 	     };
-   //      Module.prototype.imgclose = function() {
-   //    	 $('.img').addClass('imgclose');
-   //    	 document.getElementById('btn').innerHTML = self.option.button.openText;
-   //    };
 
-		 // Module.prototype.imgcloseremove = function () {
-		 // $('.img').removeClass('imgclose');
-		 // };
-
-
+        Module.prototype.imgclose = function () {
+        	 setTimeout(function(){
+        	$('.img').addClass('imgclose')}, 2500);
+        };
 
 
 
