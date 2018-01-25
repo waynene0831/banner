@@ -150,7 +150,7 @@
 		this.$ele.addClass(this.option.class.closed);
 		this.$ele.removeClass(this.option.class.opened);
 		document.getElementById('btn').innerHTML = self.option.button.openText;
-		$('.img').addClass('imgclose')
+		setTimeout(function(){$('.img').addClass('imgclose')}, 750);
 	     };
 
         Module.prototype.imgclose = function () {
